@@ -80,7 +80,7 @@ class Blockchain(object):
         Simple Proof of Work Algorithm:
          - Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
          - p is the previous proof, and p' is the new proof
-        :param last_proof: <int>
+        :param last_block: <dict>
         :return: <int>
         """
 
