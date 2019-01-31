@@ -2,7 +2,6 @@ from uuid import uuid4
 from django.http import JsonResponse
 from blockchain_app.blockchain import Blockchain
 from blockchain_app.models import Block, Transaction
-import json
 
 bad_request_default = {"status_code": 400, "status": "Bad Request",
                        "message": "Please submit a valid request."}
@@ -11,8 +10,11 @@ blockchain = Blockchain()
 
 
 def mine(request):
+    """
+        Mine transactions that haven't been assigned to a block yet and be rewarded with a coin.
+    """
 
-    if request.method == "GET":
+    if request.method == "POST":
 
         # We run the proof of work algorithm to get the next proof...
         last_block = blockchain.last_block
@@ -46,6 +48,10 @@ def mine(request):
 
 
 def new_transaction(request):
+    """
+        Creates a new transaction to go into the next mined Block
+
+    """
     if request.method == "POST":
         values = request.GET
 
@@ -64,6 +70,9 @@ def new_transaction(request):
 
 
 def full_chain(request):
+    """
+        Returns all Block and related Transaction objects.
+    """
     if request.method == "GET":
         full_chain = []
         for b in blockchain.chain:
@@ -80,6 +89,9 @@ def full_chain(request):
 
 
 def register_nodes(request):
+    """
+        Add a new node to the list of nodes. Eg. 'http://192.168.0.5:5000'
+    """
     if request.method == "POST":
 
         nodes = request.GET.get('node', None)
@@ -98,25 +110,34 @@ def register_nodes(request):
 
 
 def resolve_nodes(request):
-    replaced = blockchain.resolve_conflicts()
+    """
+        Resolves conflicts by replacing our chain with the longest valid one in the network.
+    """
+    if request.method == "PATCH":
+        replaced = blockchain.resolve_conflicts()
 
-    if replaced:
-        response = {
-            'message': 'Our chain was replaced',
-            'new_chain': blockchain.chain
-        }
+        if replaced:
+            response = {
+                'message': 'Our chain was replaced',
+                'new_chain': blockchain.chain
+            }
+        else:
+            response = {
+                'message': 'Our chain is authoritative',
+                'chain': blockchain.chain
+            }
+
+        return JsonResponse(response)
     else:
-        response = {
-            'message': 'Our chain is authoritative',
-            'chain': blockchain.chain
-        }
-
-    return JsonResponse(response)
+        return JsonResponse(bad_request_default)
 
 
 def genesis_block(request):
+    """
+    Create the genesis block only if the chain is empty. This should only be done once for a brand new chain.
+    """
     if request.method == "POST" and len(blockchain.chain) == 0:
-        # Create the genesis block only if the chain is empty. This should only be done once.
+
         gen_block = blockchain.new_block(previous_hash=1, proof=100)
 
         response = {

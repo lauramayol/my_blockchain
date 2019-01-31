@@ -199,7 +199,26 @@ class Blockchain(object):
 
         # Replace our chain if we discovered a new, valid chain longer than ours
         if new_chain:
-            self.chain = new_chain
+            self.rewrite_chain(new_chain)
             return True
 
         return False
+
+    def rewrite_chain(self, new_chain):
+        # Deleting Block objects will also delete Transaction objects.
+        Block.objects.all().delete()
+
+        for block in new_chain:
+            new_block = Block(proof=block['proof'],
+                              previous_hash=block['previous_hash'],
+                              timestamp=block['timestamp'])
+            new_block.save()
+
+            for trans in block['transactions']:
+                new_trans = Transaction(block=new_block,
+                                        sender=trans['sender'],
+                                        recipient=trans['recipient'],
+                                        amount=trans['amount'],
+                                        timestamp=trans['timestamp'])
+
+                new_trans.save()
