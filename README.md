@@ -1,13 +1,15 @@
 # Create your Custom Blockchain in Django
 *Release 1.0*
 
-The goal of this project is to set up a simple blockchain stored in sqlitedb.
+The goal of this project is to set up a simple blockchain stored in sqlitedb. Inspired by https://github.com/dvf/blockchain
 
 
 ## Features
 
 #### This release
-- [x] Mine transactions that haven't been assigned to a block yet and be rewarded with a coin.
+- [x] Mine transactions that haven't been assigned to a block yet and be rewarded with a coin. Simple Proof of Work Algorithm used:
+         - Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
+         - p is the previous proof, and p' is the new proof
 - [x] Create new transactions to be mined.
 - [x] Query full chain and transaction list.
 - [x] Register and resolve conflicts with other nodes in the network that hold a copy of same blockchain.
@@ -17,7 +19,7 @@ The goal of this project is to set up a simple blockchain stored in sqlitedb.
 
 ### Endpoints
 
-| Method | Description | Endpoint | Query |
+| Method | Description | Endpoint | Query Sample |
 | :-- | :-- | :-- | :-- |
 | `GET` | Chain | `/chain`| `n/a` |
 | `POST` | Mine | `/mine`| `n/a` |
