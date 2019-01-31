@@ -60,7 +60,7 @@ pip3 install -r requirements.txt
 ```
 python blockchain_project/manage.py runserver
 ```
-9. Check <http://127.0.0.1:8000/chain> on your browser.
+8. Check <http://127.0.0.1:8000/chain> on your browser.
 
 
 
