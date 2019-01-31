@@ -25,7 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('mine', views.mine, name='mine'),
     path('chain', views.full_chain, name='full_chain'),
-    path('/transactions/new', views.new_transaction, name='new_transaction'),
-    path('/nodes/register', views.register_nodes, name='register_nodes'),
-    path('/nodes/resolve', views.resolve_nodes, name='resolve_nodes'),
+    path('blocks/genesis', views.genesis_block, name='genesis_block'),
+    path('transactions/new', views.new_transaction, name='new_transaction'),
+    path('nodes/register', views.register_nodes, name='register_nodes'),
+    path('nodes/resolve', views.resolve_nodes, name='resolve_nodes'),
 ]
